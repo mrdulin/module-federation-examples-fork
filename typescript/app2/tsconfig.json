@@ -3,10 +3,15 @@
     "sourceMap": true,
     "strict": true,
     "baseUrl": ".",
+    "esModuleInterop": true,
     "paths": {
-      "*": ["./@mf-types/*"]
+      "*": [
+        "./@mf-types/*"
+      ]
     },
     "jsx": "react-jsx"
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }

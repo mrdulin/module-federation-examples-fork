@@ -1,2 +1,2 @@
-export * from './_types/Button';
-export { default } from './_types/Button';
+export * from './compiled-types/Button';
+export { default } from './compiled-types/Button';

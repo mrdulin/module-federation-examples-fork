@@ -1,7 +1,12 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { FederatedTypesPlugin } = require('@module-federation/typescript');
 const { ModuleFederationPlugin } = require('@module-federation/enhanced/webpack');
 const path = require('path');
+
+// MF dts DevPlugin (types hot reload) only starts when NODE_ENV=development;
+// webpack's mode: 'development' does NOT set process.env.NODE_ENV.
+if (process.argv.includes('serve') && !process.env.NODE_ENV) {
+  process.env.NODE_ENV = 'development';
+}
 
 const pkg = require('./package.json');
 
@@ -47,6 +52,10 @@ module.exports = {
       remotes: {
         app2: 'app2@http://localhost:3002/remoteEntry.js',
       },
+      dts: {
+        displayErrorInTerminal: true,
+      },
+      dev:true,
       shared: [
         {
           react: {
@@ -61,30 +70,6 @@ module.exports = {
           },
         },
       ],
-    }),
-    new FederatedTypesPlugin({
-      disableDownloadingRemoteTypes: true,
-      federationConfig: {
-        name: 'app1',
-        filename: 'remoteEntry.js',
-        remotes: {
-          app2: 'app2@http://localhost:3002/remoteEntry.js',
-        },
-        shared: [
-          {
-            react: {
-              singleton: true,
-              requiredVersion: pkg.dependencies.react,
-            },
-          },
-          {
-            'react-dom': {
-              singleton: true,
-              requiredVersion: pkg.dependencies['react-dom'],
-            },
-          },
-        ],
-      },
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
