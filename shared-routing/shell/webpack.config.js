@@ -80,7 +80,16 @@ module.exports = {
           },
         },
         // Workaround explaination: https://www.youtube.com/watch?v=-LNcpralkjM&t=540
-        './src/Service',
+        // eager is required: sharing a local module ('./src/Service') otherwise emits
+        // share-init code that pulls `ensureChunkHandlers` into html-webpack-plugin's
+        // node-target child compilation, where @module-federation/enhanced injects
+        // RemoteRuntimeModule without the federation global initializer
+        // -> "Cannot read properties of undefined (reading 'bundlerRuntimeOptions')"
+        {
+          './src/Service': {
+            eager: true,
+          },
+        },
       ],
     }),
     new HtmlWebpackPlugin({
